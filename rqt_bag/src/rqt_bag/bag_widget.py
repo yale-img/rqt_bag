@@ -429,6 +429,7 @@ class BagWidget(QWidget):
         self._timeline.handle_close()
 
     def update_size(self):
+        self._timeline.update_size()
         self._resizeEvent(QResizeEvent(self.size(), self.size()))
 
     def on_mousewheel(self, event):
