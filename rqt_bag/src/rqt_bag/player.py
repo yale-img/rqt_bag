@@ -31,10 +31,11 @@ Player listens to messages from the timeline and publishes them to ROS.
 """
 
 
-from builtin_interfaces.msg import Time
 from python_qt_binding.QtCore import QObject
 from rclpy.qos import QoSProfile, QoSHistoryPolicy
+from rclpy.time import Time
 from rosbag2_py import convert_rclcpp_qos_to_rclpy_qos
+from rosgraph_msgs.msg import Clock
 
 CLOCK_TOPIC = "/clock"
 
@@ -55,7 +56,7 @@ class Player(QObject):
         self._publishers = {}
 
         self._publish_clock = False
-        self._last_clock = Time()
+        self._last_time = Time()
         self._resume = False
 
     def resume(self):
@@ -84,7 +85,7 @@ class Player(QObject):
     def start_clock_publishing(self):
         if CLOCK_TOPIC not in self._publishers:
             # Activate clock publishing only if the publisher was created successful
-            self._publish_clock = self.create_publisher(CLOCK_TOPIC, Time, QoSProfile(depth=10))
+            self._publish_clock = self.create_publisher(CLOCK_TOPIC, Clock, QoSProfile(depth=10))
 
     def stop_clock_publishing(self):
         self._publish_clock = False
@@ -98,7 +99,7 @@ class Player(QObject):
         self.stop_clock_publishing()
 
     def create_publisher(self, topic, ros_message, offered_qos_profile):
-        ros_msg_type = type(ros_message)
+        ros_msg_type = Clock if topic == CLOCK_TOPIC else type(ros_message)
         try:
             # Publish based on the original recorded QoS settings
             self._publishers[topic] = self._node.create_publisher(ros_msg_type, topic, qos_profile=offered_qos_profile)
@@ -133,12 +134,11 @@ class Player(QObject):
             self.create_publisher(entry.topic, ros_message, qos)
 
         if self._publish_clock:
-            time_msg = Time()
-            time_msg.clock = entry.timestamp
-            if self._resume or self._last_clock.clock < time_msg.clock:
+            entry_time = Time(nanoseconds=entry.timestamp)
+            if self._resume or self._last_time < entry_time:
                 self._resume = False
-                self._last_clock = time_msg
-                self._publishers[CLOCK_TOPIC].publish(time_msg)
+                self._last_time = entry_time
+                self._publishers[CLOCK_TOPIC].publish(Clock(clock = entry_time.to_msg()))
 
         self._publishers[entry.topic].publish(ros_message)
 
