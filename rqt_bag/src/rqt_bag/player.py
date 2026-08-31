@@ -33,7 +33,7 @@ Player listens to messages from the timeline and publishes them to ROS.
 
 from builtin_interfaces.msg import Time
 from python_qt_binding.QtCore import QObject
-from rclpy.qos import QoSProfile
+from rclpy.qos import QoSProfile, QoSHistoryPolicy
 from rosbag2_py import convert_rclcpp_qos_to_rclpy_qos
 
 CLOCK_TOPIC = "/clock"
@@ -128,6 +128,8 @@ class Player(QObject):
         if entry.topic not in self._publishers:
             rosbag2_qos = bag.get_topic_metadata(entry.topic).offered_qos_profiles[0]
             qos = convert_rclcpp_qos_to_rclpy_qos(rosbag2_qos)
+            if qos.history == QoSHistoryPolicy.UNKNOWN:
+                qos.history = QoSHistoryPolicy.SYSTEM_DEFAULT
             self.create_publisher(entry.topic, ros_message, qos)
 
         if self._publish_clock:
