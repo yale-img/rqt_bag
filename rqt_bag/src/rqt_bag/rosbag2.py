@@ -37,23 +37,15 @@ from rclpy.clock import Clock, ClockType
 from rclpy.duration import Duration
 from rclpy import logging
 from rclpy.serialization import deserialize_message
-<<<<<<< HEAD
-=======
 from rclpy.time import Time
 
->>>>>>> c7d3efd (Better handling of large bag files (#178))
 import rosbag2_py
 from rosidl_runtime_py.utilities import get_message
 
-<<<<<<< HEAD
 from rosbag2_py import get_default_storage_id, StorageFilter
-
-WRITE_ONLY_MSG = "open for writing only, returning None"
-=======
 from rqt_bag import bag_helper
 
 WRITE_ONLY_MSG = 'open for writing only, returning None'
->>>>>>> c7d3efd (Better handling of large bag files (#178))
 
 Entry = namedtuple('Entry', ['topic', 'data', 'timestamp'])
 

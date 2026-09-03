@@ -28,12 +28,9 @@
 
 import rosbag2_py
 import time
-<<<<<<< HEAD
 import threading
 
-=======
 from typing import Callable, Iterable, Iterator, Optional, Tuple, Union
->>>>>>> c7d3efd (Better handling of large bag files (#178))
 
 from python_qt_binding.QtCore import qDebug, Qt, QTimer, qWarning, Signal
 from python_qt_binding.QtWidgets import QGraphicsScene, QMessageBox
@@ -47,11 +44,8 @@ from .message_listener_thread import MessageListenerThread
 from .message_loader_thread import MessageLoaderThread
 from .player import Player
 from .recorder import Recorder
-<<<<<<< HEAD
-=======
 from .rosbag2 import Entry, Rosbag2
 from .timeline_frame import TimelineFrame
->>>>>>> c7d3efd (Better handling of large bag files (#178))
 
 
 class BagTimeline(QGraphicsScene):
@@ -279,26 +273,16 @@ class BagTimeline(QGraphicsScene):
                               progress_cb: Optional[Callable[[int], None]] = None) \
             -> Iterator[Tuple[Rosbag2, Entry]]:
         """
-<<<<<<< HEAD
-        generator function for bag entries
-        :param topics: list of topics to query, ''list(str)''
-=======
         Get a generator of bag entries.
 
         :param topics: list of topics to query (if None, all topics are used), ''list(str)''
->>>>>>> c7d3efd (Better handling of large bag files (#178))
         :param start_stamp: stamp to start at, ''rclpy.time.Time''
         :param end_stamp: stamp to end at, ''rclpy.time.Time''
         :param progress_cb: callback function to report progress, called once per each percent.
         :returns: tuple of (bag, entry) for the entries in the bag file, ''(rosbag2.Rosbag2, msg)''
         """
         with self._bag_lock:
-<<<<<<< HEAD
-            bag_entries = []
-            bag_by_iter = {}
-=======
             relevant_bags = []
->>>>>>> c7d3efd (Better handling of large bag files (#178))
             for b in self._bags:
                 bag_start_time = b.get_earliest_timestamp()
                 if bag_start_time is not None and bag_start_time > end_stamp:

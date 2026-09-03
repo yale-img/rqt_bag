@@ -866,14 +866,10 @@ class TimelineFrame(QGraphicsItem):
     def _update_index_cache(self, topic: Optional[Union[str, Iterable[str]]],
                             progress_cb: Optional[Callable[[int], None]] = None) -> int:
         """
-<<<<<<< HEAD
-        Updates the cache of message timestamps for the given topic.
-=======
         Update the cache of message timestamps for the given topic(s).
 
         :param topic: topic or list of topics to update the cache for, ''list(str)''
         :param progress_cb: callback function to report progress, called once per each percent.
->>>>>>> c7d3efd (Better handling of large bag files (#178))
         :return: number of messages added to the index cache
         """
         if self._start_stamp is None or self._end_stamp is None:
